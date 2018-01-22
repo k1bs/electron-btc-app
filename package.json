@@ -19,5 +19,8 @@
   "homepage": "https://github.com/k1bs/electron-btc-app#readme",
   "devDependencies": {
     "electron": "1.7.10"
+  },
+  "dependencies": {
+    "cross-fetch": "^1.1.1"
   }
 }
