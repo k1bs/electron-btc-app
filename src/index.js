@@ -2,10 +2,17 @@ const electron = require('electron')
 const path = require('path')
 const BrowserWindow = electron.remote.BrowserWindow
 const fetch = require('cross-fetch')
+const ipc = electron.ipcRenderer
 
 const notifyBtn = document.getElementById('notify-button')
 const price = document.querySelector('h1')
 const targetPrice = document.getElementById('target-price')
+let targetPriceVal
+
+const notification = {
+  title: 'BTC Alert',
+  body: 'BTC just beat your target price!'
+}
 
 function getBTC () {
   fetch('https://min-api.cryptocompare.com/data/pricemulti?fsyms=BTC&tsyms=USD')
@@ -13,6 +20,9 @@ function getBTC () {
     .then(json => {
       const cryptos = json.BTC.USD
       price.innerHTML = `$ ${cryptos.toLocaleString('en')}`
+      if (targetPrice.innerHTML !== '' && targetPriceVal < cryptos) {
+        const myNotification = new window.Notification(notification.title, notification)
+      }
     })
 }
 
@@ -28,4 +38,9 @@ notifyBtn.addEventListener('click', (event) => {
   })
   win.loadURL(modalPath)
   win.show()
+})
+
+ipc.on('targetPriceVal', (event, arg) => {
+  targetPriceVal = Number(arg)
+  targetPrice.innerHTML = `$ ${targetPriceVal.toLocaleString('en')}`
 })
