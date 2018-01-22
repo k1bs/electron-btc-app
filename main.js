@@ -3,6 +3,20 @@ const path = require('path')
 const url = require('url')
 const shell = require('electron').shell
 const ipc = require('electron').ipcMain
+const Datastore = require('nedb')
+
+const db = new Datastore({filename: 'assets/db/test.db', autoload: true})
+
+let testNum = Math.floor(Math.random() * 100)
+
+db.insert({a: testNum})
+
+db.find({}, (err, docs) => {
+  console.log(docs)
+  if (err) {
+    console.log(err)
+  }
+})
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
